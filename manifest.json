@@ -1,0 +1,210 @@
+{
+	"_version": "1.5.0",
+	"sap.app": {
+		"id": "rsh.eam.ordergantts1",
+		"type": "application",
+		"i18n": "i18n/i18n.properties",
+		"applicationVersion": {
+			"version": "9.0.11"
+		},
+		"title": "{{appTitle}}",
+		"description": "{{appDescription}}",
+		"resources": "resources.json",
+		"ach": "CA-RSH-EAM",
+		"sourceTemplate": {
+			"id": "servicecatalog.connectivityComponentForManifest",
+			"version": "0.0.0"
+		},
+		"dataSources": {
+			"RSH_EAM_ORDER_GANTT_SRV": {
+				"uri": "/sap/opu/odata/sap/RSH_EAM_ORDER_GANTT_SRV/",
+				"type": "OData",
+				"settings": {
+					"odataVersion": "2.0",
+					"localUri": "localService/RSH_EAM_ORDER_GANTT_SRV/metadata.xml",
+					"annotations": [
+						"CATALOGSERVICE"
+					]
+				}
+			},
+			"DetailViewAnnotations": {
+				"uri": "../DetailViewAnnotations.xml",
+				"type": "ODataAnnotation",
+				"settings": {
+					"localUri": "../DetailViewAnnotations.xml"
+				}
+			},
+			"CATALOGSERVICE": {
+				"uri": "/sap/opu/odata/iwfnd/CATALOGSERVICE;v=0002/Annotations(TechnicalName='RSH_EAM_ORDER_GANTT_ANNO_MDL',Version='0001')/$value",
+				"type": "ODataAnnotation",
+				"settings": {
+					"odataVersion": "2.0",
+					"localUri": "webapp/localService/CATALOGSERVICE/metadata.xml"
+				}
+			},
+			"RSH_SB_MAINTENANCE_ORDER": {
+				"uri": "/sap/opu/odata/sap/RSH_SB_MAINTENANCE_ORDER/",
+				"type": "OData",
+				"settings": {
+					"localUri": "localService/RSH_SB_MAINTENANCE_ORDER/metadata.xml"
+				}
+			}
+		}
+	},
+	"sap.fiori": {
+		"registrationIds": [
+			"F2603"
+		],
+		"archeType": "transactional"
+	},
+	"sap.ui": {
+		"technology": "UI5",
+		"icons": {
+			"icon": "",
+			"favIcon": "",
+			"phone": "",
+			"phone@2": "",
+			"tablet": "",
+			"tablet@2": ""
+		},
+		"deviceTypes": {
+			"desktop": true,
+			"tablet": true,
+			"phone": true
+		},
+		"supportedThemes": [
+			"sap_hcb",
+			"sap_belize"
+		]
+	},
+	"sap.ui5": {
+		"rootView": {
+			"viewName": "rsh.eam.ordergantts1.view.App",
+			"type": "XML",
+			"id": "app"
+		},
+		"dependencies": {
+			"minUI5Version": "1.30.0",
+			"libs": {
+				"sap.collaboration": {
+					"lazy": true
+				},
+				"sap.gantt": {
+					"lazy": false
+				},
+				"sap.m": {},
+				"sap.ui.comp": {
+					"lazy": false
+				},
+				"sap.ui.core": {},
+				"sap.ui.layout": {
+					"lazy": false
+				},
+				"sap.ui.table": {
+					"lazy": false
+				},
+				"sap.ushell": {
+					"lazy": false
+				},
+				"sap.uxap": {
+					"lazy": false
+				},
+				"sap.rsh.eam.lib.common": {
+					"lazy": false,
+					"minVersion": "1.0.0"
+				}
+			}
+		},
+		"contentDensities": {
+			"compact": true,
+			"cozy": true
+		},
+		"models": {
+			"i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"settings": {
+					"bundleName": "rsh.eam.ordergantts1.i18n.i18n"
+				}
+			},
+			"": {
+				"dataSource": "RSH_EAM_ORDER_GANTT_SRV",
+				"preload": true,
+				"settings": {
+					"defaultBindingMode": "TwoWay",
+					"defaultCountMode": "Inline",
+					"metadataUrlParams": {
+						"sap-value-list": "all"
+					}
+				}
+			},
+			"readModel": {
+				"dataSource": "RSH_EAM_ORDER_GANTT_SRV",
+				"preload": false,
+				"settings": {
+					"defaultBindingMode": "TwoWay",
+					"defaultCountMode": "Inline",
+					"metadataUrlParams": {
+						"sap-value-list": "all"
+					}
+				}
+			},
+			"relationshipModel": {
+				"type": "sap.ui.model.odata.v2.ODataModel",
+				"settings": {
+					"defaultOperationMode": "Server",
+					"defaultBindingMode": "OneWay",
+					"defaultCountMode": "Request"
+				},
+				"dataSource": "RSH_SB_MAINTENANCE_ORDER",
+				"preload": true
+			},
+			"GanttSettingConfiguration": {
+				"type": "sap.ui.model.json.JSONModel",
+				"settings": {},
+				"uri": "model/GanttSettingConfiguration.json",
+				"preload": true
+			}
+		},
+		"routing": {
+			"config": {
+				"viewPath": "rsh.eam.ordergantts1.view",
+				"controlId": "app",
+				"viewType": "XML",
+				"controlAggregation": "pages",
+				"bypassed": {
+					"target": [
+						"notFound"
+					]
+				},
+				"async": true
+			},
+			"targets": {
+				"OrderGantt": {
+					"viewType": "XML",
+					"transition": "slide",
+					"clearAggregation": true,
+					"viewName": "OrderGantt"
+				},
+				"SchedulingBoard": {
+					"viewType": "XML",
+					"viewName": "SchedulingBoard"
+				}
+			},
+			"routes": [{
+				"name": "OrderGantt",
+				"pattern": "",
+				"titleTarget": "",
+				"greedy": false,
+				"target": [
+					"SchedulingBoard"
+				]
+			}, {
+				"pattern": ":?previousHash:",
+				"name": "schedulingboard",
+				"target": [
+					"SchedulingBoard"
+				]
+			}]
+		}
+	}
+}

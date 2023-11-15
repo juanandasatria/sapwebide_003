@@ -1,0 +1,13 @@
+{
+  "application": "rsh.eam.ordergantts1",
+  "version": "9.0.11",
+  "buildNumber": "3",
+  "buildId": "3",
+  "branch": "detached",
+  "revision": "4ebb564a196c61e855c697df0d24bb5856ceb011",
+  "GitURL": "",
+  "buildStatus": "${env.buildStatus}",
+  "translationComplete": "${env.translationComplete}",
+  "cidi": "${env.cidi}",
+  "cfdCM": "${env.cfdCM}"
+}

@@ -1,0 +1,14 @@
+<!--
+
+    Copyright (C) 2009-2021 SAP SE or an SAP affiliate company. All rights reserved.
+
+-->
+<core:FragmentDefinition id="idFragOpContextMenu" xmlns="sap.m" xmlns:core="sap.ui.core">
+	<ActionSheet id="idOpActionSheet" placement="PreferredBottomOrFlip">
+		<Button id="idButtonChangeAction" text="{i18n>ChangeOperationButtonText}" press="pressChangeOperationsButton" type="Transparent"/>
+		<Button id="idButtonDispatchAction" text="{i18n>DispatchButtonText}" press="pressDispatchButton" type="Transparent"/>
+		<Button id="idButtonCancDispatchAction" text="{i18n>CancelDispatchButtonText}" press="pressCancDispatchButton" type="Transparent"/>
+		<Button id="idButtonRemoveConstraintsAction" text="{i18n>RemoveConstraintsButtonText}" press="pressRemoveConstraintsButton"
+			type="Transparent"/>
+	</ActionSheet>
+</core:FragmentDefinition>

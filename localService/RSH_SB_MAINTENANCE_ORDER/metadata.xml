@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2009-2021 SAP SE or an SAP affiliate company. All rights reserved.
+
+-->
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+	<edmx:Reference Uri="./IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='ER9CLNT001')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"><edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/></edmx:Reference>
+	<edmx:Reference Uri="./IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='ER9CLNT001')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"><edmx:Include Alias="Capabilities" Namespace="Org.OData.Capabilities.V1"/></edmx:Reference>
+	<edmx:Reference Uri="./IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='ER9CLNT001')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"><edmx:Include Alias="Communication" Namespace="com.sap.vocabularies.Communication.v1"/></edmx:Reference>
+	<edmx:Reference Uri="./IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_AGGREGATION',Version='0001',SAP__Origin='ER9CLNT001')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"><edmx:Include Alias="Aggregation" Namespace="Org.OData.Aggregation.V1"/></edmx:Reference>
+	<edmx:Reference Uri="./IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PERSONALDATA',Version='0001',SAP__Origin='ER9CLNT001')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"><edmx:Include Alias="PersonalData" Namespace="com.sap.vocabularies.PersonalData.v1"/></edmx:Reference>
+	<edmx:Reference Uri="./IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_VALIDATION',Version='0001',SAP__Origin='ER9CLNT001')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"><edmx:Include Alias="Validation" Namespace="Org.OData.Validation.V1"/></edmx:Reference>
+	<edmx:Reference Uri="./IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_ANALYTICS',Version='0001',SAP__Origin='ER9CLNT001')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"><edmx:Include Alias="Analytics" Namespace="com.sap.vocabularies.Analytics.v1"/></edmx:Reference>
+	<edmx:Reference Uri="./IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='ER9CLNT001')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"><edmx:Include Alias="Measures" Namespace="Org.OData.Measures.V1"/></edmx:Reference>
+	<edmx:Reference Uri="./IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='ER9CLNT001')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"><edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/></edmx:Reference>
+	<edmx:DataServices m:DataServiceVersion="2.0">
+		<Schema Namespace="cds_rsh_sd_maintenance_order" sap:schema-version="1" xml:lang="en" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+			<EntityType Name="C_RSHMaintenanceOrderTPType" sap:content-version="1" sap:label="Projection for R_MaintenanceOrderTP">
+				<Key><PropertyRef Name="MaintenanceOrder"/></Key><Property Name="Equipment_fc" Type="Edm.Byte" sap:creatable="false" sap:filterable="false" sap:label="Dyn. Field Control" sap:sortable="false" sap:updatable="false"/><Property Name="MaintenanceOrderType_fc" Type="Edm.Byte" sap:creatable="false" sap:filterable="false" sap:label="Dyn. Field Control" sap:sortable="false" sap:updatable="false"/><Property Name="MaintenancePlannerGroup_fc" Type="Edm.Byte" sap:creatable="false" sap:filterable="false" sap:label="Dyn. Field Control" sap:sortable="false" sap:updatable="false"/><Property Name="MaintenancePlanningPlant_fc" Type="Edm.Byte" sap:creatable="false" sap:filterable="false" sap:label="Dyn. Field Control" sap:sortable="false" sap:updatable="false"/><Property Name="MaintObjectLocAcctAssgmtNmbr_fc" Type="Edm.Byte" sap:creatable="false" sap:filterable="false" sap:label="Dyn. Field Control" sap:sortable="false" sap:updatable="false"/><Property Name="Update_mc" Type="Edm.Boolean" sap:creatable="false" sap:filterable="false" sap:label="Dyn. Method Control" sap:sortable="false" sap:updatable="false"/><Property Name="to_MaintenanceOrderOperation_oc" Type="Edm.Boolean" sap:creatable="false" sap:filterable="false" sap:label="Dynamic CbA-Control" sap:sortable="false" sap:updatable="false"/><Property MaxLength="12" Name="MaintenanceOrder" Nullable="false" Type="Edm.String" sap:display-format="UpperCase" sap:label="Order" sap:quickinfo="Order Number"/><Property MaxLength="4" Name="MaintenanceOrderType" Type="Edm.String" sap:display-format="UpperCase" sap:field-control="MaintenanceOrderType_fc" sap:label="Order Type"/><Property MaxLength="4" Name="MaintenancePlanningPlant" Type="Edm.String" sap:display-format="UpperCase" sap:field-control="MaintenancePlanningPlant_fc" sap:label="Planning Plant" sap:quickinfo="Maintenance Planning Plant"/><Property MaxLength="3" Name="MaintenancePlannerGroup" Type="Edm.String" sap:display-format="UpperCase" sap:field-control="MaintenancePlannerGroup_fc" sap:label="Maint. Planner Group" sap:quickinfo="Planner Group for Customer Service and Plant Maintenance" sap:value-list="standard"/><Property MaxLength="18" Name="Equipment" Type="Edm.String" sap:display-format="UpperCase" sap:field-control="Equipment_fc" sap:label="Equipment" sap:quickinfo="Equipment Number" sap:value-list="standard"/><Property MaxLength="12" Name="MaintObjectLocAcctAssgmtNmbr" Type="Edm.String" sap:display-format="UpperCase" sap:field-control="MaintObjectLocAcctAssgmtNmbr_fc" sap:label="Loc/Acct Assignment" sap:quickinfo="Location and account assignment for technical object"/><NavigationProperty FromRole="FromRole_assoc_EF1F54E3EEAF551AF83193DA7FA3F51F" Name="to_MaintenanceOrderOperation" Relationship="cds_rsh_sd_maintenance_order.assoc_EF1F54E3EEAF551AF83193DA7FA3F51F" ToRole="ToRole_assoc_EF1F54E3EEAF551AF83193DA7FA3F51F"/></EntityType>
+			<EntityType Name="C_RSHMaintenanceOrdOperationTPType" sap:content-version="1" sap:label="R_MaintenanceOrderOperationTP Projection">
+				<Key><PropertyRef Name="MaintenanceOrder"/><PropertyRef Name="MaintenanceOrderOperation"/><PropertyRef Name="MaintenanceOrderSubOperation"/></Key><Property Name="MaintenanceOrderOperation_fc" Type="Edm.Byte" sap:creatable="false" sap:filterable="false" sap:label="Dyn. Field Control" sap:sortable="false" sap:updatable="false"/><Property Name="MaintenanceOrderSubOperation_fc" Type="Edm.Byte" sap:creatable="false" sap:filterable="false" sap:label="Dyn. Field Control" sap:sortable="false" sap:updatable="false"/><Property Name="OperationPersonResponsible_fc" Type="Edm.Byte" sap:creatable="false" sap:filterable="false" sap:label="Dyn. Field Control" sap:sortable="false" sap:updatable="false"/><Property Name="OperationSupplier_fc" Type="Edm.Byte" sap:creatable="false" sap:filterable="false" sap:label="Dyn. Field Control" sap:sortable="false" sap:updatable="false"/><Property Name="Delete_mc" Type="Edm.Boolean" sap:creatable="false" sap:filterable="false" sap:label="Dyn. Method Control" sap:sortable="false" sap:updatable="false"/><Property Name="Update_mc" Type="Edm.Boolean" sap:creatable="false" sap:filterable="false" sap:label="Dyn. Method Control" sap:sortable="false" sap:updatable="false"/><Property Name="to_MaintOrderOpRelationship_oc" Type="Edm.Boolean" sap:creatable="false" sap:filterable="false" sap:label="Dynamic CbA-Control" sap:sortable="false" sap:updatable="false"/><Property MaxLength="12" Name="MaintenanceOrder" Nullable="false" Type="Edm.String" sap:display-format="UpperCase" sap:label="Order" sap:quickinfo="Order Number" sap:updatable="false"/><Property MaxLength="4" Name="MaintenanceOrderOperation" Nullable="false" Type="Edm.String" sap:display-format="UpperCase" sap:field-control="MaintenanceOrderOperation_fc" sap:label="Operation" sap:quickinfo="Maintenance Order Operation"/><Property MaxLength="4" Name="MaintenanceOrderSubOperation" Nullable="false" Type="Edm.String" sap:display-format="UpperCase" sap:field-control="MaintenanceOrderSubOperation_fc" sap:label="Suboperation" sap:quickinfo="Maintenance Order Suboperation"/><Property MaxLength="8" Name="OperationPersonResponsible" Type="Edm.String" sap:display-format="NonNegative" sap:field-control="OperationPersonResponsible_fc" sap:label="Personnel number"/><Property MaxLength="10" Name="OperationSupplier" Type="Edm.String" sap:display-format="UpperCase" sap:field-control="OperationSupplier_fc" sap:label="Supplier" sap:quickinfo="Account Number of Supplier"/><NavigationProperty FromRole="FromRole_assoc_1AF485D121223DAE68BF60CE71F4FF73" Name="to_MaintenanceOrder" Relationship="cds_rsh_sd_maintenance_order.assoc_1AF485D121223DAE68BF60CE71F4FF73" ToRole="ToRole_assoc_1AF485D121223DAE68BF60CE71F4FF73"/><NavigationProperty FromRole="FromRole_assoc_898759EA3D6977E05827CBAD82A7A60A" Name="to_MaintOrderOpRelationship" Relationship="cds_rsh_sd_maintenance_order.assoc_898759EA3D6977E05827CBAD82A7A60A" ToRole="ToRole_assoc_898759EA3D6977E05827CBAD82A7A60A"/></EntityType>
+			<EntityType Name="C_RSHMaintenanceOrdOpRelshpTPType" sap:content-version="1" sap:label="R_MaintOrderOpRelationshipTP Projection">
+				<Key><PropertyRef Name="MaintenanceOrder"/><PropertyRef Name="MaintenanceOrderOperation"/><PropertyRef Name="MaintenanceOrderSubOperation"/><PropertyRef Name="MaintOrdOperationIsSuccessor"/><PropertyRef Name="RelatedMaintenanceOrder"/><PropertyRef Name="RelatedMaintOrderOperation"/><PropertyRef Name="OrderOpRelationshipIntType"/></Key><Property Name="MaintOrdOperationIsSuccessor_fc" Type="Edm.Byte" sap:creatable="false" sap:filterable="false" sap:label="Dyn. Field Control" sap:sortable="false" sap:updatable="false"/><Property Name="OpRelshpOffsetDuration_fc" Type="Edm.Byte" sap:creatable="false" sap:filterable="false" sap:label="Dyn. Field Control" sap:sortable="false" sap:updatable="false"/><Property Name="OpRelshpOffsetDurationUnit_fc" Type="Edm.Byte" sap:creatable="false" sap:filterable="false" sap:label="Dyn. Field Control" sap:sortable="false" sap:updatable="false"/><Property Name="OrderOpRelationshipIntType_fc" Type="Edm.Byte" sap:creatable="false" sap:filterable="false" sap:label="Dyn. Field Control" sap:sortable="false" sap:updatable="false"/><Property Name="Delete_mc" Type="Edm.Boolean" sap:creatable="false" sap:filterable="false" sap:label="Dyn. Method Control" sap:sortable="false" sap:updatable="false"/><Property Name="Update_mc" Type="Edm.Boolean" sap:creatable="false" sap:filterable="false" sap:label="Dyn. Method Control" sap:sortable="false" sap:updatable="false"/><Property MaxLength="12" Name="MaintenanceOrder" Nullable="false" Type="Edm.String" sap:display-format="UpperCase" sap:label="Order" sap:quickinfo="Order Number" sap:updatable="false"/><Property MaxLength="4" Name="MaintenanceOrderOperation" Nullable="false" Type="Edm.String" sap:display-format="UpperCase" sap:label="Operation" sap:quickinfo="Maintenance Order Operation" sap:updatable="false"/><Property MaxLength="4" Name="MaintenanceOrderSubOperation" Nullable="false" Type="Edm.String" sap:creatable="false" sap:display-format="UpperCase" sap:label="Suboperation" sap:quickinfo="Maintenance Order Suboperation" sap:updatable="false"/><Property Name="MaintOrdOperationIsSuccessor" Nullable="false" Type="Edm.Boolean" sap:display-format="UpperCase" sap:field-control="MaintOrdOperationIsSuccessor_fc" sap:label="Successor indicator" sap:quickinfo="Indicator: Activity is successor to selected activity"/><Property MaxLength="12" Name="RelatedMaintenanceOrder" Nullable="false" Type="Edm.String" sap:display-format="UpperCase" sap:label="Order" sap:quickinfo="Order Number"/><Property MaxLength="4" Name="RelatedMaintOrderOperation" Nullable="false" Type="Edm.String" sap:display-format="UpperCase" sap:label="Operation" sap:quickinfo="Maintenance Order Operation"/><Property MaxLength="2" Name="OrderOpRelationshipIntType" Nullable="false" Type="Edm.String" sap:display-format="UpperCase" sap:field-control="OrderOpRelationshipIntType_fc" sap:heading="" sap:label="Type of relationship"/><Property MaxLength="10" Name="PredecessorMaintOrderRouting" Type="Edm.String" sap:creatable="false" sap:display-format="NonNegative" sap:label="Predecessor ID no." sap:quickinfo="No. identifying the network to which the predecessor belongs" sap:updatable="false"/><Property MaxLength="8" Name="PredecessorOrderRoutingNode" Type="Edm.String" sap:creatable="false" sap:display-format="NonNegative" sap:label="Counter" sap:quickinfo="Internal counter" sap:updatable="false"/><Property MaxLength="10" Name="SuccessorMaintOrderRouting" Type="Edm.String" sap:creatable="false" sap:display-format="NonNegative" sap:heading="" sap:label="No. identifying the network to which the successor belongs" sap:updatable="false"/><Property MaxLength="8" Name="SuccessorOrderRoutingNode" Type="Edm.String" sap:creatable="false" sap:display-format="NonNegative" sap:label="Counter" sap:quickinfo="Internal counter" sap:updatable="false"/><Property MaxLength="10" Name="RelatedMaintOrderRouting" Type="Edm.String" sap:display-format="NonNegative" sap:heading="" sap:label="No. identifying the network to which the successor belongs"/><Property Name="OpRelshpOffsetDuration" Precision="5" Scale="1" Type="Edm.Decimal" sap:field-control="OpRelshpOffsetDuration_fc" sap:label="Offset rel.ship" sap:quickinfo="Time interval between relationships" sap:unit="OpRelshpOffsetDurationUnit"/><Property MaxLength="3" Name="OpRelshpOffsetDurationUnit" Type="Edm.String" sap:field-control="OpRelshpOffsetDurationUnit_fc" sap:label="Relationship unit" sap:quickinfo="Unit for the time interval between relationships" sap:semantics="unit-of-measure"/><NavigationProperty FromRole="FromRole_assoc_779C3B6F6039A3F705692CEF6E2D7389" Name="to_MaintenanceOrder" Relationship="cds_rsh_sd_maintenance_order.assoc_779C3B6F6039A3F705692CEF6E2D7389" ToRole="ToRole_assoc_779C3B6F6039A3F705692CEF6E2D7389"/><NavigationProperty FromRole="FromRole_assoc_6389FE960A4467BACE6746AC02F0F4F2" Name="to_MaintenanceOrderOperation" Relationship="cds_rsh_sd_maintenance_order.assoc_6389FE960A4467BACE6746AC02F0F4F2" ToRole="ToRole_assoc_6389FE960A4467BACE6746AC02F0F4F2"/></EntityType>
+			<EntityType Name="I_EquipmentStdVHType" sap:content-version="1" sap:label="Equipment" sap:value-list="true">
+				<Key><PropertyRef Name="Equipment"/></Key><Property MaxLength="18" Name="Equipment" Nullable="false" Type="Edm.String" sap:display-format="UpperCase" sap:label="Equipment" sap:quickinfo="Equipment Number" sap:text="Equipment_Text"/><Property MaxLength="40" Name="Equipment_Text" Type="Edm.String" sap:creatable="false" sap:label="Description" sap:updatable="false"/></EntityType>
+			<EntityType Name="I_MaintPlnrGrpStdVHType" sap:content-version="1" sap:label="Maintenance Planner Group" sap:value-list="true">
+				<Key><PropertyRef Name="MaintenancePlannerGroup"/><PropertyRef Name="MaintenancePlanningPlant"/></Key><Property MaxLength="3" Name="MaintenancePlannerGroup" Nullable="false" Type="Edm.String" sap:display-format="UpperCase" sap:label="Planner Group" sap:quickinfo="Maintenance Planner Group" sap:text="MaintenancePlannerGroupName"/><Property MaxLength="4" Name="MaintenancePlanningPlant" Nullable="false" Type="Edm.String" sap:display-format="UpperCase" sap:label="Planning Plant" sap:quickinfo="Maintenance Planning Plant"/><Property MaxLength="18" Name="MaintenancePlannerGroupName" Type="Edm.String" sap:label="Planner Group Name" sap:quickinfo="Name of the Maintenance Planner Group"/></EntityType>
+			<Association Name="assoc_EF1F54E3EEAF551AF83193DA7FA3F51F" sap:content-version="1">
+				<End Multiplicity="1" Role="FromRole_assoc_EF1F54E3EEAF551AF83193DA7FA3F51F" Type="cds_rsh_sd_maintenance_order.C_RSHMaintenanceOrderTPType"><OnDelete Action="Cascade"/></End><End Multiplicity="*" Role="ToRole_assoc_EF1F54E3EEAF551AF83193DA7FA3F51F" Type="cds_rsh_sd_maintenance_order.C_RSHMaintenanceOrdOperationTPType"/>
+				<ReferentialConstraint>
+					<Principal Role="FromRole_assoc_EF1F54E3EEAF551AF83193DA7FA3F51F"><PropertyRef Name="MaintenanceOrder"/></Principal>
+					<Dependent Role="ToRole_assoc_EF1F54E3EEAF551AF83193DA7FA3F51F"><PropertyRef Name="MaintenanceOrder"/></Dependent>
+				</ReferentialConstraint>
+			</Association>
+			<Association Name="assoc_1AF485D121223DAE68BF60CE71F4FF73" sap:content-version="1"><End Multiplicity="1" Role="FromRole_assoc_1AF485D121223DAE68BF60CE71F4FF73" Type="cds_rsh_sd_maintenance_order.C_RSHMaintenanceOrdOperationTPType"/><End Multiplicity="1" Role="ToRole_assoc_1AF485D121223DAE68BF60CE71F4FF73" Type="cds_rsh_sd_maintenance_order.C_RSHMaintenanceOrderTPType"/></Association>
+			<Association Name="assoc_898759EA3D6977E05827CBAD82A7A60A" sap:content-version="1">
+				<End Multiplicity="1" Role="FromRole_assoc_898759EA3D6977E05827CBAD82A7A60A" Type="cds_rsh_sd_maintenance_order.C_RSHMaintenanceOrdOperationTPType"><OnDelete Action="Cascade"/></End><End Multiplicity="*" Role="ToRole_assoc_898759EA3D6977E05827CBAD82A7A60A" Type="cds_rsh_sd_maintenance_order.C_RSHMaintenanceOrdOpRelshpTPType"/>
+				<ReferentialConstraint>
+					<Principal Role="FromRole_assoc_898759EA3D6977E05827CBAD82A7A60A"><PropertyRef Name="MaintenanceOrder"/><PropertyRef Name="MaintenanceOrderSubOperation"/><PropertyRef Name="MaintenanceOrderOperation"/></Principal>
+					<Dependent Role="ToRole_assoc_898759EA3D6977E05827CBAD82A7A60A"><PropertyRef Name="MaintenanceOrder"/><PropertyRef Name="MaintenanceOrderSubOperation"/><PropertyRef Name="MaintenanceOrderOperation"/></Dependent>
+				</ReferentialConstraint>
+			</Association>
+			<Association Name="assoc_779C3B6F6039A3F705692CEF6E2D7389" sap:content-version="1"><End Multiplicity="1" Role="FromRole_assoc_779C3B6F6039A3F705692CEF6E2D7389" Type="cds_rsh_sd_maintenance_order.C_RSHMaintenanceOrdOpRelshpTPType"/><End Multiplicity="1" Role="ToRole_assoc_779C3B6F6039A3F705692CEF6E2D7389" Type="cds_rsh_sd_maintenance_order.C_RSHMaintenanceOrderTPType"/></Association>
+			<Association Name="assoc_6389FE960A4467BACE6746AC02F0F4F2" sap:content-version="1"><End Multiplicity="1" Role="FromRole_assoc_6389FE960A4467BACE6746AC02F0F4F2" Type="cds_rsh_sd_maintenance_order.C_RSHMaintenanceOrdOpRelshpTPType"/><End Multiplicity="1" Role="ToRole_assoc_6389FE960A4467BACE6746AC02F0F4F2" Type="cds_rsh_sd_maintenance_order.C_RSHMaintenanceOrdOperationTPType"/></Association>
+			<EntityContainer Name="cds_rsh_sd_maintenance_order_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx"><EntitySet EntityType="cds_rsh_sd_maintenance_order.C_RSHMaintenanceOrderTPType" Name="C_RSHMaintenanceOrderTP" sap:content-version="1" sap:deletable="false" sap:updatable-path="Update_mc"/><EntitySet EntityType="cds_rsh_sd_maintenance_order.C_RSHMaintenanceOrdOperationTPType" Name="C_RSHMaintenanceOrdOperationTP" sap:content-version="1" sap:deletable-path="Delete_mc" sap:updatable-path="Update_mc"/><EntitySet EntityType="cds_rsh_sd_maintenance_order.C_RSHMaintenanceOrdOpRelshpTPType" Name="C_RSHMaintenanceOrdOpRelshpTP" sap:content-version="1" sap:deletable-path="Delete_mc" sap:updatable-path="Update_mc"/><EntitySet EntityType="cds_rsh_sd_maintenance_order.I_EquipmentStdVHType" Name="I_EquipmentStdVH" sap:content-version="1" sap:creatable="false" sap:deletable="false" sap:searchable="true" sap:updatable="false"/><EntitySet EntityType="cds_rsh_sd_maintenance_order.I_MaintPlnrGrpStdVHType" Name="I_MaintPlnrGrpStdVH" sap:content-version="1" sap:creatable="false" sap:deletable="false" sap:searchable="true" sap:updatable="false"/>
+				<AssociationSet Association="cds_rsh_sd_maintenance_order.assoc_6389FE960A4467BACE6746AC02F0F4F2" Name="assoc_6389FE960A4467BACE6746AC02F0F4F2" sap:content-version="1" sap:creatable="false" sap:deletable="false" sap:updatable="false"><End EntitySet="C_RSHMaintenanceOrdOpRelshpTP" Role="FromRole_assoc_6389FE960A4467BACE6746AC02F0F4F2"/><End EntitySet="C_RSHMaintenanceOrdOperationTP" Role="ToRole_assoc_6389FE960A4467BACE6746AC02F0F4F2"/></AssociationSet>
+				<AssociationSet Association="cds_rsh_sd_maintenance_order.assoc_898759EA3D6977E05827CBAD82A7A60A" Name="assoc_898759EA3D6977E05827CBAD82A7A60A" sap:content-version="1" sap:creatable="false" sap:deletable="false" sap:updatable="false"><End EntitySet="C_RSHMaintenanceOrdOperationTP" Role="FromRole_assoc_898759EA3D6977E05827CBAD82A7A60A"/><End EntitySet="C_RSHMaintenanceOrdOpRelshpTP" Role="ToRole_assoc_898759EA3D6977E05827CBAD82A7A60A"/></AssociationSet>
+				<AssociationSet Association="cds_rsh_sd_maintenance_order.assoc_779C3B6F6039A3F705692CEF6E2D7389" Name="assoc_779C3B6F6039A3F705692CEF6E2D7389" sap:content-version="1" sap:creatable="false" sap:deletable="false" sap:updatable="false"><End EntitySet="C_RSHMaintenanceOrdOpRelshpTP" Role="FromRole_assoc_779C3B6F6039A3F705692CEF6E2D7389"/><End EntitySet="C_RSHMaintenanceOrderTP" Role="ToRole_assoc_779C3B6F6039A3F705692CEF6E2D7389"/></AssociationSet>
+				<AssociationSet Association="cds_rsh_sd_maintenance_order.assoc_1AF485D121223DAE68BF60CE71F4FF73" Name="assoc_1AF485D121223DAE68BF60CE71F4FF73" sap:content-version="1" sap:creatable="false" sap:deletable="false" sap:updatable="false"><End EntitySet="C_RSHMaintenanceOrdOperationTP" Role="FromRole_assoc_1AF485D121223DAE68BF60CE71F4FF73"/><End EntitySet="C_RSHMaintenanceOrderTP" Role="ToRole_assoc_1AF485D121223DAE68BF60CE71F4FF73"/></AssociationSet>
+				<AssociationSet Association="cds_rsh_sd_maintenance_order.assoc_EF1F54E3EEAF551AF83193DA7FA3F51F" Name="assoc_EF1F54E3EEAF551AF83193DA7FA3F51F" sap:content-version="1" sap:creatable="false" sap:deletable="false" sap:updatable="false"><End EntitySet="C_RSHMaintenanceOrderTP" Role="FromRole_assoc_EF1F54E3EEAF551AF83193DA7FA3F51F"/><End EntitySet="C_RSHMaintenanceOrdOperationTP" Role="ToRole_assoc_EF1F54E3EEAF551AF83193DA7FA3F51F"/></AssociationSet>
+			</EntityContainer>
+			<Annotations Target="cds_rsh_sd_maintenance_order.C_RSHMaintenanceOrderTPType/MaintenancePlannerGroup" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="Common.ValueList">
+					<Record><PropertyValue Property="Label" String="Maint. Planner Group"/><PropertyValue Property="CollectionPath" String="I_MaintPlnrGrpStdVH"/><PropertyValue Bool="true" Property="SearchSupported"/>
+						<PropertyValue Property="Parameters">
+							<Collection>
+								<Record Type="Common.ValueListParameterInOut"><PropertyValue Property="LocalDataProperty" PropertyPath="MaintenancePlannerGroup"/><PropertyValue Property="ValueListProperty" String="MaintenancePlannerGroup"/></Record>
+								<Record Type="Common.ValueListParameterInOut"><PropertyValue Property="LocalDataProperty" PropertyPath="MaintenancePlanningPlant"/><PropertyValue Property="ValueListProperty" String="MaintenancePlanningPlant"/></Record>
+								<Record Type="Common.ValueListParameterDisplayOnly"><PropertyValue Property="ValueListProperty" String="MaintenancePlannerGroupName"/></Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations Target="cds_rsh_sd_maintenance_order.C_RSHMaintenanceOrderTPType/Equipment" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="Common.ValueList">
+					<Record><PropertyValue Property="Label" String="Equipment"/><PropertyValue Property="CollectionPath" String="I_EquipmentStdVH"/><PropertyValue Bool="true" Property="SearchSupported"/>
+						<PropertyValue Property="Parameters">
+							<Collection>
+								<Record Type="Common.ValueListParameterInOut"><PropertyValue Property="LocalDataProperty" PropertyPath="Equipment"/><PropertyValue Property="ValueListProperty" String="Equipment"/></Record>
+								<Record Type="Common.ValueListParameterDisplayOnly"><PropertyValue Property="ValueListProperty" String="Equipment_Text"/></Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations Target="cds_rsh_sd_maintenance_order.cds_rsh_sd_maintenance_order_Entities" xmlns="http://docs.oasis-open.org/odata/ns/edm"><Annotation Bool="true" Term="Common.ApplyMultiUnitBehaviorForSortingAndFiltering"/>
+				<Annotation Term="Aggregation.ApplySupported">
+					<Record>
+						<PropertyValue Property="Transformations">
+							<Collection>
+								<String>aggregate</String>
+								<String>groupby</String>
+								<String>filter</String>
+							</Collection>
+						</PropertyValue><PropertyValue EnumMember="None" Property="Rollup"/></Record>
+				</Annotation>
+			</Annotations>
+			<Annotations Target="cds_rsh_sd_maintenance_order.C_RSHMaintenanceOrdOpRelshpTPType/RelatedMaintOrderOperation" xmlns="http://docs.oasis-open.org/odata/ns/edm"><Annotation EnumMember="Common.FieldControlType/Mandatory" Term="Common.FieldControl"/></Annotations>
+			<Annotations Target="cds_rsh_sd_maintenance_order.C_RSHMaintenanceOrdOpRelshpTPType/RelatedMaintenanceOrder" xmlns="http://docs.oasis-open.org/odata/ns/edm"><Annotation EnumMember="Common.FieldControlType/Mandatory" Term="Common.FieldControl"/></Annotations>
+			<Annotations Target="cds_rsh_sd_maintenance_order.C_RSHMaintenanceOrderTPType/MaintenanceOrder" xmlns="http://docs.oasis-open.org/odata/ns/edm"><Annotation EnumMember="Common.FieldControlType/Mandatory" Term="Common.FieldControl"/></Annotations>
+			<Annotations Target="cds_rsh_sd_maintenance_order.cds_rsh_sd_maintenance_order_Entities/C_RSHMaintenanceOrdOpRelshpTP" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="Capabilities.FilterRestrictions">
+					<Record>
+						<PropertyValue Property="NonFilterableProperties">
+							<Collection>
+								<PropertyPath>MaintOrdOperationIsSuccessor_fc</PropertyPath>
+								<PropertyPath>OpRelshpOffsetDuration_fc</PropertyPath>
+								<PropertyPath>OpRelshpOffsetDurationUnit_fc</PropertyPath>
+								<PropertyPath>OrderOpRelationshipIntType_fc</PropertyPath>
+								<PropertyPath>Delete_mc</PropertyPath>
+								<PropertyPath>Update_mc</PropertyPath>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="Capabilities.SortRestrictions">
+					<Record>
+						<PropertyValue Property="NonSortableProperties">
+							<Collection>
+								<PropertyPath>MaintOrdOperationIsSuccessor_fc</PropertyPath>
+								<PropertyPath>OpRelshpOffsetDuration_fc</PropertyPath>
+								<PropertyPath>OpRelshpOffsetDurationUnit_fc</PropertyPath>
+								<PropertyPath>OrderOpRelationshipIntType_fc</PropertyPath>
+								<PropertyPath>Delete_mc</PropertyPath>
+								<PropertyPath>Update_mc</PropertyPath>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations Target="cds_rsh_sd_maintenance_order.cds_rsh_sd_maintenance_order_Entities/C_RSHMaintenanceOrdOperationTP" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="Capabilities.FilterRestrictions">
+					<Record>
+						<PropertyValue Property="NonFilterableProperties">
+							<Collection>
+								<PropertyPath>MaintenanceOrderOperation_fc</PropertyPath>
+								<PropertyPath>MaintenanceOrderSubOperation_fc</PropertyPath>
+								<PropertyPath>OperationPersonResponsible_fc</PropertyPath>
+								<PropertyPath>OperationSupplier_fc</PropertyPath>
+								<PropertyPath>Delete_mc</PropertyPath>
+								<PropertyPath>Update_mc</PropertyPath>
+								<PropertyPath>to_MaintOrderOpRelationship_oc</PropertyPath>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="Capabilities.NavigationRestrictions">
+					<Record>
+						<PropertyValue Property="RestrictedProperties">
+							<Collection>
+								<Record><PropertyValue NavigationPropertyPath="to_MaintOrderOpRelationship" Property="NavigationProperty"/>
+									<PropertyValue Property="InsertRestrictions">
+										<Record><PropertyValue Path="to_MaintOrderOpRelationship_oc" Property="Insertable"/></Record>
+									</PropertyValue>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="Capabilities.SortRestrictions">
+					<Record>
+						<PropertyValue Property="NonSortableProperties">
+							<Collection>
+								<PropertyPath>MaintenanceOrderOperation_fc</PropertyPath>
+								<PropertyPath>MaintenanceOrderSubOperation_fc</PropertyPath>
+								<PropertyPath>OperationPersonResponsible_fc</PropertyPath>
+								<PropertyPath>OperationSupplier_fc</PropertyPath>
+								<PropertyPath>Delete_mc</PropertyPath>
+								<PropertyPath>Update_mc</PropertyPath>
+								<PropertyPath>to_MaintOrderOpRelationship_oc</PropertyPath>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations Target="cds_rsh_sd_maintenance_order.cds_rsh_sd_maintenance_order_Entities/C_RSHMaintenanceOrderTP" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+				<Annotation Term="Capabilities.FilterRestrictions">
+					<Record>
+						<PropertyValue Property="NonFilterableProperties">
+							<Collection>
+								<PropertyPath>Equipment_fc</PropertyPath>
+								<PropertyPath>MaintenanceOrderType_fc</PropertyPath>
+								<PropertyPath>MaintenancePlannerGroup_fc</PropertyPath>
+								<PropertyPath>MaintenancePlanningPlant_fc</PropertyPath>
+								<PropertyPath>MaintObjectLocAcctAssgmtNmbr_fc</PropertyPath>
+								<PropertyPath>Update_mc</PropertyPath>
+								<PropertyPath>to_MaintenanceOrderOperation_oc</PropertyPath>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="Capabilities.NavigationRestrictions">
+					<Record>
+						<PropertyValue Property="RestrictedProperties">
+							<Collection>
+								<Record><PropertyValue NavigationPropertyPath="to_MaintenanceOrderOperation" Property="NavigationProperty"/>
+									<PropertyValue Property="InsertRestrictions">
+										<Record><PropertyValue Path="to_MaintenanceOrderOperation_oc" Property="Insertable"/></Record>
+									</PropertyValue>
+								</Record>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+				<Annotation Term="Capabilities.SortRestrictions">
+					<Record>
+						<PropertyValue Property="NonSortableProperties">
+							<Collection>
+								<PropertyPath>Equipment_fc</PropertyPath>
+								<PropertyPath>MaintenanceOrderType_fc</PropertyPath>
+								<PropertyPath>MaintenancePlannerGroup_fc</PropertyPath>
+								<PropertyPath>MaintenancePlanningPlant_fc</PropertyPath>
+								<PropertyPath>MaintObjectLocAcctAssgmtNmbr_fc</PropertyPath>
+								<PropertyPath>Update_mc</PropertyPath>
+								<PropertyPath>to_MaintenanceOrderOperation_oc</PropertyPath>
+							</Collection>
+						</PropertyValue>
+					</Record>
+				</Annotation>
+			</Annotations>
+			<Annotations Target="cds_rsh_sd_maintenance_order.C_RSHMaintenanceOrdOpRelshpTPType/MaintenanceOrder" xmlns="http://docs.oasis-open.org/odata/ns/edm"><Annotation Term="Core.Immutable"/></Annotations>
+			<Annotations Target="cds_rsh_sd_maintenance_order.C_RSHMaintenanceOrdOpRelshpTPType/MaintenanceOrderOperation" xmlns="http://docs.oasis-open.org/odata/ns/edm"><Annotation Term="Core.Immutable"/></Annotations>
+			<Annotations Target="cds_rsh_sd_maintenance_order.C_RSHMaintenanceOrdOperationTPType/MaintenanceOrder" xmlns="http://docs.oasis-open.org/odata/ns/edm"><Annotation Term="Core.Immutable"/></Annotations><atom:link href="./sap/RSH_SB_MAINTENANCE_ORDER/$metadata" rel="self" xmlns:atom="http://www.w3.org/2005/Atom"/><atom:link href="./sap/RSH_SB_MAINTENANCE_ORDER/$metadata" rel="latest-version" xmlns:atom="http://www.w3.org/2005/Atom"/></Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

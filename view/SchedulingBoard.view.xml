@@ -1,0 +1,611 @@
+<!--
+
+    Copyright (C) 2009-2021 SAP SE or an SAP affiliate company. All rights reserved.
+
+-->
+<mvc:View controllerName="rsh.eam.ordergantts1.controller.SchedulingBoard" xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns="sap.gantt.simple" xmlns:gnt-def="sap.gantt.def"
+	xmlns:gnt-pattern="sap.gantt.def.pattern" xmlns:axistime="sap.gantt.axistime" xmlns:config="sap.gantt.config" xmlns:m="sap.m"
+	xmlns:mvc="sap.ui.core.mvc" xmlns:f="sap.f" xmlns:table="sap.ui.table" xmlns:layout="sap.ui.layout" xmlns:core="sap.ui.core"
+	xmlns:smartFilterBar="sap.ui.comp.smartfilterbar" xmlns:smartVariantManagement="sap.ui.comp.smartvariants"
+	xmlns:cal="sap.ui.unified.calendar" xmlns:gnt-cal="sap.gantt.def.cal" id="idOrderGanttView">
+	<f:DynamicPage id="GanttPageId" showFooter="{MessagePopoverButtonModel>/visible}" fitContent="true">
+		<!-- DynamicPage Title -->
+		<f:title>
+			<f:DynamicPageTitle id="idOrdGanttDynPgTitle">
+				<f:heading>
+					<smartVariantManagement:SmartVariantManagement id="idGanttPgVarMgmt" persistencyKey="rsh.eam.ordergantts1.svmpkey"
+						showExecuteOnSelection="true"/>
+				</f:heading>
+				<f:snappedContent>
+					<m:Text id="statusText"/>
+				</f:snappedContent>
+				<f:actions>
+					<m:ToolbarSpacer id="idActionsTBSpacer"/>
+					<m:Button id="FilterButton" text="{i18n>OperationsFilterButtonText}" press=".openFilter" type="Transparent"/>
+				</f:actions>
+			</f:DynamicPageTitle>
+		</f:title>
+		<!-- Enable Smart filter  -->
+		<f:header>
+			<f:DynamicPageHeader id="idOrderGanttDynPgHeader" pinnable="true">
+				<f:content>
+					<smartFilterBar:SmartFilterBar id="idOrderGanttSmartFilterBar" entitySet="C_RSHOrdersAndOperations" initialise="onInitSmartFilter"
+						search="onFilter" assignedFiltersChanged="onAssignedFiltersChanged" showRestoreOnFB="true" useToolbar="false"
+						afterVariantLoad="onAfterVariantLoad" initialized="onSmartFilterInitialized" persistencyKey="rsh.eam.ordergantts1.filterpkey"
+						smartVariant="idGanttPgVarMgmt" app:dateFormatSettings='\{"UTC":true\}'>
+						<smartFilterBar:controlConfiguration id="_sMartFilterConfig">
+							<smartFilterBar:ControlConfiguration index="0" key="PeriodType" visibleInAdvancedArea="true"
+								conditionType="{module: 'sap.rsh.eam.lib.common.utils.DateRangeGantt', ignoreTime: true, operations: { filter: {path: 'category', contains: ['MONTH','WEEK','YEAR','TO','TODAY','DAYS','QUARTER'], exclude:true}}}"
+								mandatory="mandatory"></smartFilterBar:ControlConfiguration>
+							<smartFilterBar:ControlConfiguration id="idWorkCenterCC" index="1" key="WorkCenter" visibleInAdvancedArea="true"/>
+							<smartFilterBar:ControlConfiguration id="idMaintPrioCC" index="2" key="MaintPriority" visibleInAdvancedArea="true"/>
+							<smartFilterBar:ControlConfiguration id="idOrderTypCC" index="3" key="OrderType" visibleInAdvancedArea="true"/>
+							<smartFilterBar:ControlConfiguration id="idProcStatusCC" index="4" key="ProcessingStatus" visibleInAdvancedArea="true"/>
+							<smartFilterBar:ControlConfiguration id="idFinalDueDateCC" index="5" key="LatestAcceptableCompletionDate" visibleInAdvancedArea="false"
+								conditionType="sap.ui.comp.config.condition.DateRangeType"/>
+						</smartFilterBar:controlConfiguration>
+					</smartFilterBar:SmartFilterBar>
+				</f:content>
+			</f:DynamicPageHeader>
+		</f:header>
+		<f:content>
+			<!-- Set Gantt Chart Container -->
+			<GanttChartContainer id="idOrderGanttContainer" enableTimeScrollSync="true" customSettingChange="onCustomSettingChange">
+				<toolbar>
+					<ContainerToolbar id="idGanttContainerToolbar" design="Auto" showLegendButton="true" alignCustomContentToRight="false"
+						showSettingButton="false">
+						<!-- settingItems="{path:'settingsModel', factory: '.createContent'}" -->
+						<!-- settingItems="{path:'settingsModel>/settings', factory:'.createContent'}" -->
+						<!--<m:Toolbar width="100%">-->
+						<m:Title text="{parts: ['i18n>maintenanceOrdersItems', 'UIModel>/rowCount'],formatter: 'jQuery.sap.formatMessage'}"/>
+						<!-- <m:Button id="idButtonPrint" text="{i18n>Print}" press="onPrint" type="Transparent"/> -->
+						<m:ToolbarSpacer/>
+						<!-- comes in UI5 1.66, which can solve the issue of overflow in toolbar -->
+						<ContainerToolbarPlaceholder type="Spacer"/>
+						<m:Button id="idScheduleOrder" text="{i18n>ScheduleOrderButtonText}" press="pressScheduleOrderButton" type="Transparent" enabled="false">
+							<m:layoutData>
+								<m:ToolbarLayoutData shrinkable="true"/>
+							</m:layoutData>
+						</m:Button>
+						<m:Button id="idButtonChange" text="{i18n>ChangeOperationButtonText}" press="pressChangeOperationsButton" type="Transparent" enabled="false">
+							<m:layoutData>
+								<m:ToolbarLayoutData shrinkable="true"/>
+							</m:layoutData>
+						</m:Button>
+						<m:Button id="idButtonDispatch" text="{i18n>DispatchButtonText}" press="pressDispatchButton" type="Transparent" enabled="false">
+							<m:layoutData>
+								<m:ToolbarLayoutData shrinkable="true"/>
+							</m:layoutData>
+						</m:Button>
+						<m:Button id="idButtonCancDispatch" text="{i18n>CancelDispatchButtonText}" press="pressCancDispatchButton" type="Transparent"
+							enabled="false">
+							<m:layoutData>
+								<m:ToolbarLayoutData shrinkable="true"/>
+							</m:layoutData>
+						</m:Button>
+						<m:Button id="idRemoveConstraints" text="{i18n>RemoveConstraintsButtonText}" press="pressRemoveConstraintsButton" type="Transparent"
+							enabled="false">
+							<m:layoutData>
+								<m:ToolbarLayoutData shrinkable="true"/>
+							</m:layoutData>
+						</m:Button>
+						<m:Button icon="sap-icon://expand" press=".expandSelected" tooltip="{i18n>expand}" type="Transparent">
+							<m:layoutData>
+								<m:ToolbarLayoutData shrinkable="true"/>
+							</m:layoutData>
+						</m:Button>
+						<m:Button icon="sap-icon://collapse" press=".collapseSelected" tooltip="{i18n>collapse}" type="Transparent">
+							<m:layoutData>
+								<m:ToolbarLayoutData shrinkable="true"/>
+							</m:layoutData>
+						</m:Button>
+						<!--</m:Toolbar>-->
+						<legendContainer>
+							<LegendContainer height="450px" width="250px">
+								<ListLegend title="{i18n>legendTitle}">
+									<ListLegendItem legendName="{i18n>order}">
+										<BaseChevron shapeId="idOrderLegendShape" fill="@sapNeutralColor" title="{i18n>order}" showTitle="false" headWidth="5" tailWidth="5"/>
+									</ListLegendItem>
+									<ListLegendItem legendName="{i18n>operation}">
+										<BaseRectangle shapeId="idOperationLegendShape" fill="@sapNeutralColor" title="{i18n>operation}" showTitle="false"/>
+									</ListLegendItem>
+									<ListLegendItem legendName="{i18n>suboperation}">
+										<BaseRectangle shapeId="idSubOpLegendShape" fill="@sapNeutralColor" title="{i18n>suboperation}" showTitle="false"/>
+									</ListLegendItem>
+									<!--<ListLegendItem legendName="{i18n>onCriticalPath}">
+										<BaseRectangle shapeId="idCriticalPathLegendShape" fill="@sapNegativeColor" height="2" title="{i18n>onCriticalPath}" showTitle="false"/>
+									</ListLegendItem>-->
+									<ListLegendItem legendName="{i18n>due}">
+										<BaseRectangle shapeId="idDueLegendShape" fill="@sapCriticalColor" title="{i18n>due}" showTitle="false"/>
+									</ListLegendItem>
+									<ListLegendItem legendName="{i18n>dispatched}">
+										<BaseRectangle shapeId="idDispatchedLegendShape" fill="@sapPositiveColor" title="{i18n>dispatched}" showTitle="false"/>
+									</ListLegendItem>
+									<ListLegendItem legendName="{i18n>inprocess}">
+										<BaseRectangle shapeId="idInprocessLegendShape" fill="@sapNeutralColor" title="{i18n>inprocess}" showTitle="false"/>
+									</ListLegendItem>
+									<ListLegendItem legendName="{i18n>finalDueDate}">
+										<BaseDiamond shapeId="idFinalDueLegendShape" stroke="@sapNeutralColor" title="{i18n>finalDueDate}" showTitle="false" strokeWidth="3"
+											xBias="-2.5" fillOpacity="1" fill="@sapUiNeutralBG"/>
+									</ListLegendItem>
+									<ListLegendItem legendName="{i18n>opConstraints}">
+										<BaseRectangle shapeId="idConstraintsLegendShape" fill="@sapTextColor" title="{i18n>opConstraints}" showTitle="false" width="2" xBias="11"/>
+									</ListLegendItem>
+									<!-- Legend Container does not support Relationship -->
+									<!--<ListLegendItem legendName="Relationship">-->
+									<!--	<Relationship shapeId="idRelationshipLegendShape" predecessor="idInprocessLegendShape"-->
+									<!--		successor="idDispatchedLegendShape" type="sap.gantt.simple.RelationshipType.FinishToStart" fill="@sapNeutralColor"-->
+									<!--		title="Relationship" showTitle="false" interactive="true" selected="true"/>-->
+									<!--</ListLegendItem>-->
+								</ListLegend>
+							</LegendContainer>
+						</legendContainer>
+						<m:Button id="idCustomGanttSettingBtn" icon="sap-icon://action-settings" press="onCustomGanttSettingPress" type="Transparent"/>
+					</ContainerToolbar>
+				</toolbar>
+				<!-- GanttChart declaration -->
+				<GanttChartWithTable id="idOrderGanttChartWithTable" ghostAlignment="Start" adhocLineLayer="Bottom" enableAdhocLine="false"
+					nowLineInUTC="false" shapeOverRelationship="false" dragOrientation="Horizontal" enableSelectAndDrag="false" shapeSelectionMode="Single"
+					shapeConnect="createRelationship" shapeDrop="MoveOperationBasedOnDateChange" showShapeTimeOnDrag="false"
+					shapeContextMenu="onShapeContextMenu" visibleHorizonUpdate="onVisibleHorizonUpdate">
+					<table>
+						<table:TreeTable id="idOrderTreeTable" visibleRowCountMode="Auto" minAutoRowCount="1" rowActionCount="1" selectionBehavior="RowSelector"
+							selectionMode="MultiToggle" enableColumnReordering="false" rowSelectionChange=".selectTableRows" showColumnVisibilityMenu="true"
+							columnSelect=".onColumnSelect" columnVisibility=".onColumnVisibilityChanged" firstVisibleRowChanged=".onFirstVisibleRowChanged">
+							<table:rowSettingsTemplate>
+								<GanttRowSettings id="OrderGntRowStgID" rowId="{OrderOperationRowID}" shapes4="{path:'to_UtilIndicator', templateShareable: 'true'}"
+									relationships="{path:'to_Relationships', templateShareable: 'true'}">
+									<shapes1>
+										<BaseConditionalShape activeShape="{= ${OrderOperationRowLevel} > 0 ? 1 : 0 }">
+											<shapes>
+												<BaseChevron shapeId="{OrderOperationRowID}" countInBirdEye="true" time="{path: 'OrderStartDateTime', formatter: '.removeTimeZoneOffset'}"
+													endTime="{path: 'OrderEndDateTime', formatter: '.removeTimeZoneOffset'}" hoverable="true"
+													title="{parts: ['OrderStartDateTime', 'OrderEndDateTime'], formatter: '.getTitle'}" showTitle="false"
+													tooltip="{parts: ['OrderStartDateTime', 'OrderEndDateTime'], formatter: '.getTitle'}"
+													fill="{path: 'ProcessingStatus', formatter: '.getColor'}"
+													height="{parts: ['OrderOperationRowLevel', 'UIModel>/condensedModeActive'], formatter: '.getShevronHight'}"
+													headWidth="{path: 'UIModel>/condensedModeActive', formatter: '.getShevronHeadWidth'}"
+													tailWidth="{path: 'UIModel>/condensedModeActive', formatter: '.getShevronTailWidth'}"/>
+												<BaseGroup hoverable="true" shapeId="{OrderOperationRowID}"
+													connectable="{parts: ['UIModel>/showImpRel', 'UIModel>/showExpRel', 'MaintenanceOrderSubOperation', 'ProcessingStatus'], formatter: '.isConnectable'}"
+													draggable="{parts: ['MaintenanceOrderSubOperation', 'ProcessingStatus'], formatter: '.isDNDPossible'}"
+													selectable="{parts: ['MaintenanceOrderSubOperation', 'ProcessingStatus'], formatter: '.isDNDPossible'}">
+													<shapes>
+														<BaseRectangle countInBirdEye="true" hoverable="true" yBias="{= ${UIModel>/showUtilizationIndicator} ? 2 : 0}"
+															draggable="{parts: ['MaintenanceOrderSubOperation', 'ProcessingStatus'], formatter: '.isDNDPossible'}"
+															selectable="{parts: ['MaintenanceOrderSubOperation', 'ProcessingStatus'], formatter: '.isDNDPossible'}"
+															time="{path:'OrderOperationStartDateTime', formatter: '.removeTimeZoneOffset'}"
+															endTime="{path: 'OrderOperationEndDateTime', formatter: '.removeTimeZoneOffset'}"
+															title="{parts: ['OrderOperationStartDateTime', 'OrderOperationEndDateTime'], formatter: '.getTitle'}" showTitle="false"
+															tooltip="{parts: ['OrderOperationStartDateTime', 'OrderOperationEndDateTime'], formatter: '.getTitle'}"
+															fill="{path: 'ProcessingStatus', formatter: '.getColor'}"
+															height="{parts: ['OrderOperationRowLevel', 'UIModel>/condensedModeActive'], formatter: '.getRectangleHight'}"/>
+														<BaseRectangle id="idOperatoinStartConstraint" yBias="{= ${UIModel>/showUtilizationIndicator} ? 2 : 0}"
+															visible="{= ${UIModel>/showRestrictions} ? true : false}" fillOpacity="{= ${UIModel>/showRestrictions} ? 1 : 0}"
+															time="{parts: ['OrderOpStartConstraintDateTime', 'OpBscStartDateConstraintType'], formatter: '.constraintTimeFormatter'}"
+															height="{= ${UIModel>/condensedModeActive} ? '18' : '26'}" xBias="-1" width="2" showTitle="false" hoverable="true"
+															fill="{parts: ['OpBscStartDateConstraintType', 'OrderOpStartConstraintDateTime', 'OrderOperationStartDateTime'], formatter: '.getOpConstraintFill'}"
+															title="{parts: ['OpBscStartDateConstraintType', 'OrderOpStartConstraintDateTime'], formatter: '.getStartConstraintTypeText'}"
+															tooltip="{parts: ['OpBscStartDateConstraintType', 'OrderOpStartConstraintDateTime'], formatter: '.getStartConstraintTypeText'}"/>
+														<!--<BaseRectangle id="idOperatoinEndConstraint" shapeId="{OrderOperationRowID}" visible="{= ${UIModel>/showRestrictions} ? true : false}"-->
+														<!--	time="{parts: ['OrderOpEndConstraintDateTime', 'OpBscEndDateConstraintType'], formatter: '.constraintTimeFormatter'}" width="2"-->
+														<!--	height="{= ${UIModel>/condensedModeActive} ? '18' : '26'}" xBias="-1" hoverable="true" showTitle="false"-->
+														<!--	fill="{parts: ['OpBscEndDateConstraintType', 'OrderOpEndConstraintDateTime', 'OrderOperationEndDateTime'], formatter: '.getOpConstraintFill'}"-->
+														<!--	title="{parts: ['OpBscEndDateConstraintType', 'OrderOpEndConstraintDateTime'], formatter: '.getFinishConstraintTypeText'}"-->
+														<!--	tooltip="{parts: ['OpBscEndDateConstraintType', 'OrderOpEndConstraintDateTime'], formatter: '.getFinishConstraintTypeText'}"/>-->
+													</shapes>
+												</BaseGroup>
+											</shapes>
+										</BaseConditionalShape>
+									</shapes1>
+									<shapes2>
+										<BaseRectangle id="idBaseRectangleIndicator" shapeId="{OrderOperationRowID}" fill="@sapNegativeColor" draggable="true" selectable="true"
+											height="{parts: ['OrderOperationRowLevel', 'UIModel>/condensedModeActive'], formatter: '.getCriticalPathHight'}"
+											yBias="{parts: ['OrderOperationRowLevel', 'UIModel>/condensedModeActive'], formatter: '.getCPyBiasValue'}"
+											time="{path: 'OrderOperationStartDateTime', formatter: '.removeTimeZoneOffset'}"
+											endTime="{path: 'OrderOperationEndDateTime' , formatter: '.removeTimeZoneOffset'}"
+											visible="{parts: ['OperationIsOnCriticalPath', 'UIModel>/showCriticalPath'], formatter: '.getOnCriticalVisibility'}"/>
+									</shapes2>
+									<calendars>
+										<BaseCalendar id="idCal" shapeId="{CalendarID}" calendarName="{WorkCenterInternalID}" visible="{= ${OrderOperationRowLevel} === 1}"/>
+									</calendars>
+									<shapes3>
+										<BaseDiamond id="idBaseDiamondFinalDue" shapeId="{OrderOperationRowID}" height="{= ${UIModel>/condensedModeActive} ? '15' : '20'}"
+											width="{= ${UIModel>/condensedModeActive} ? '15' : '20'}" hoverable="true"
+											time="{path: 'LatestAcceptableCompletionDate', formatter: '.ganttUtils.formatEndTime'}" showTitle="false"
+											visible="{= ${UIModel>/showFinalDueDate} &amp;&amp; ${OrderOperationRowLevel} === 0 }" stroke="@sapNeutralColor"
+											strokeWidth="{= ${UIModel>/condensedModeActive} ? 2 : 3}" fillOpacity="1" fill="@sapUiNeutralBG"
+											tooltip="{path: 'LatestAcceptableCompletionDate', formatter: '.getFFDMilestoneTitle'}"
+											title="{path: 'LatestAcceptableCompletionDate', formatter: '.getFFDMilestoneTitle'}"/>
+									</shapes3>
+									<shapes4>
+										<BaseRectangle shapeId="{WorkCenterInternalID}" countInBirdEye="true" hoverable="true"
+											visible="{= ${WorkCenterAvailableCapacity} > 0 || ${WorkCenterRequiredCapacity} > 0}"
+											tooltip="{parts: ['WorkCenterUtilization', 'WorkCenterRequiredCapacity', 'WorkCenterAvailableCapacity'], formatter: '.getTooltipForUtilization'}"
+											time="{path: 'CalendarDate', formatter: '.formatStartTime'}" endTime="{path: 'CalendarDate', formatter: '.ganttUtils.formatEndTime'}"
+											yBias="{= ${UIModel>/condensedModeActive} ? -11 : -14}" height="{= ${UIModel>/condensedModeActive} ? '4' : '6'}" showTitle="false"
+											fill="{path:'WorkCenterUtilization', formatter: '.getUtilizationColor'}"/>
+									</shapes4>
+									<relationships>
+										<Relationship
+											shapeId="{parts: ['PredecessorOrderOperationRowID','SuccessorOrderOperationRowID', 'NetworkActivityRelationType'], formatter: '.getShapeId'}"
+											predecessor="{PredecessorOrderOperationRowID}" successor="{SuccessorOrderOperationRowID}" type="{NetworkActivityRelationType}"
+											lShapeForTypeFS="false" lShapeForTypeSF="false"
+											tooltip="{parts: ['NetworkActivityRelationType','PredecessorOrder','PredecessorOrderOperation','SuccessorOrder','SuccessorOrderOperation','RelationshipIsViolated'], formatter:'.getRelationToolTip'}"
+											stroke="{parts: ['RelationshipIsExplicit','RelationshipIsViolated'], formatter: '.getStrokeFill'}"
+											enableCurvedEdge="{= ${RelationshipIsExplicit} === 'X' ? true : false}" selectable="{= ${RelationshipIsExplicit} === 'X' ? true : false}"
+											strokeWidth="{= ${RelationshipIsExplicit} === 'X' ? 2 : 1}" strokeDasharray="{= ${RelationshipIsExplicit} === 'X' ? '0' : '5 10'}"
+											strokeOpacity="{parts: ['RelationshipIsExplicit', 'UIModel>/showImpRel', 'UIModel>/showExpRel'], formatter: '.getRelVisibility'}"/>
+										<!--visible="{= ${RelationshipIsExplicit} === 'X')? ${UIModel>/showExpRel} : ${UIModel>/showImpRel}}"/>-->
+									</relationships>
+								</GanttRowSettings>
+							</table:rowSettingsTemplate>
+							<!-- Columns declaration -->
+							<table:columns>
+								<table:Column id="idOrderDescColumn" label="{i18n>treeColumnMaintenanceOrder}" sortProperty="MaintenanceOrder"
+									tooltip="{i18n>treeColumnMaintenanceOrder}" width="40%">
+									<table:template>
+										<m:HBox id="idIconLinkHL" alignItems="Center">
+											<core:Icon id="iconid" busy="false" busyIndicatorDelay="1000" visible="true" alt="{MaintenanceOrderDesc}"
+												src="{path: 'OrderOperationRowLevel' , formatter: '.formatter.imageOrder'}" color="Neutral" decorative="true" useIconTooltip="true"
+												noTabStop="false" class="sapUiTinyMarginEnd" tooltip="{path: 'OrderOperationRowLevel' , formatter: '.formatter.imageTooltip'}"/>
+											<m:Link id="idOrdOpLink"
+												text="{parts:['OrderOperationRowLevel','MaintenanceOrder','MaintenanceOrderDesc','MaintenanceOrderOperation','OperationDescription','MaintenanceOrderSubOperation'], formatter:'.formatOrderOpsLink'}"
+												press="handleLinkPress"></m:Link>
+										</m:HBox>
+									</table:template>
+								</table:Column>
+								<table:Column id="idWCColumn" label="{/#C_RSHOrdersAndOperationsType/MainWorkCenter/@sap:label}" sortProperty="MainWorkCenter"
+									tooltip="{/#C_RSHOrdersAndOperationsType/MainWorkCenter/@sap:label}" width="20%">
+									<table:template>
+										<m:Label id="idWCLabel" text="{MainWorkCenter}"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idPriorityColumn" label="{i18n>treeColumnMainPriority}" sortProperty="MaintPriority"
+									tooltip="{i18n>treeColumnMainPriority}" width="20%">
+									<table:template>
+										<m:Label id="idMaintPrioLabel" text="{MaintPriorityDesc}"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idStatusColumn" label="{i18n>treeColumnProcessingStatus}" sortProperty="ProcessingStatus"
+									tooltip="{i18n>treeColumnProcessingStatus}" width="20%">
+									<table:template>
+										<m:ObjectStatus id="idProcStatusObjStatus" text="{ProcessingStatusText}"
+											state="{path: 'ProcessingStatus', formatter: '.formatter.statusColor'}"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idOrderTypeColumn" label="{/#C_RSHOrdersAndOperationsType/OrderType/@sap:label}" visible="false" sortProperty="OrderType"
+									tooltip="{/#C_RSHOrdersAndOperationsType/OrderType/@sap:quickinfo}" width="20%">
+									<table:template>
+										<m:Label id="idOrdTypeLabel" text="{OrderType}"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idMaintenanceActivityTypeNameColumn" label="{/#C_RSHOrdersAndOperationsType/MaintenanceActivityType/@sap:label}"
+									visible="false" sortProperty="MaintenanceActivityType" tooltip="{/#C_RSHOrdersAndOperationsType/MaintenanceActivityType/@sap:quickinfo}"
+									width="20%">
+									<table:template>
+										<m:Label id="idActTypeLabel" text="{parts: ['MaintenanceActivityType' , 'MaintenanceActivityTypeName'], formatter: '.formatActivityType'}"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idBasicStartDateColumn" label="{/#C_RSHOrdersAndOperationsType/MaintOrdBasicStartDate/@sap:label}" visible="false"
+									sortProperty="MaintOrdBasicStartDate" tooltip="{/#C_RSHOrdersAndOperationsType/MaintOrdBasicStartDate/@sap:quickinfo}" width="20%"
+									hAlign="Right">
+									<table:template>
+										<m:Text id="idOrderBasicStDtText" text="{path: 'MaintOrdBasicStartDate' , type: 'sap.ui.model.type.Date' , formatOptions: {UTC: true}}"
+											wrapping="{= ${UIModel>/condensedModeActive} ? false : true }"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idBasicEndDateColumn" label="{/#C_RSHOrdersAndOperationsType/MaintOrdBasicEndDate/@sap:label}" visible="false"
+									sortProperty="MaintOrdBasicEndDate" tooltip="{/#C_RSHOrdersAndOperationsType/MaintOrdBasicEndDate/@sap:quickinfo}" width="20%"
+									hAlign="Right">
+									<table:template>
+										<m:Text id="idOrdBasicEndDtText" text="{path: 'MaintOrdBasicEndDate' , type: 'sap.ui.model.type.Date' , formatOptions: {UTC: true}}"
+											wrapping="{= ${UIModel>/condensedModeActive} ? false : true }"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idControllingAreaColumn" label="{/#C_RSHOrdersAndOperationsType/ControllingArea/@sap:label}" visible="false"
+									sortProperty="ControllingArea" tooltip="{/#C_RSHOrdersAndOperationsType/ControllingArea/@sap:quickinfo}" width="20%">
+									<table:template>
+										<m:Label id="idContrAreaLabel" text="{ControllingArea}"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idFunctionalLocationColumn" visible="true" sortProperty="FunctionalLocationName"
+									tooltip="{/#C_RSHOrdersAndOperationsType/FunctionalLocationName/@sap:quickinfo}" width="20%">
+									<m:Text text="{i18n>Functional Location}"/>
+									<table:template>
+										<m:Link id="idFuncLocText" text="{parts: ['FunctionalLocation','FunctionalLocationName']}" press="handleFuncLocLinkPress"
+											tooltip="{parts: ['FunctionalLocation','FunctionalLocationName']}"
+											visible="{= ${FunctionalLocation} || ${FunctionalLocationName} ? true : false}"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idEquipmentNameColumn" visible="false" sortProperty="EquipmentName"
+									tooltip="{/#C_RSHOrdersAndOperationsType/EquipmentName/@sap:quickinfo}" width="20%">
+									<m:Text text="{i18n>Equipment}"/>
+									<table:template>
+										<m:Link id="idEquipText" text="{parts: ['Equipment','EquipmentName']}" press="handleEquipmentLinkPress"
+											tooltip="{parts: ['Equipment','EquipmentName']}" visible="{= ${Equipment} || ${EquipmentName} ? true : false}"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idLocationColumn" label="{/#C_RSHOrdersAndOperationsType/AssetLocation/@sap:label}" visible="false"
+									sortProperty="AssetLocation" tooltip="{/#C_RSHOrdersAndOperationsType/AssetLocation/@sap:quickinfo}" width="20%">
+									<table:template>
+										<m:Label id="idAssetLocLabel" text="{AssetLocation}"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idMaintenancePlannerColumn" label="{/#C_RSHOrdersAndOperationsType/MaintenancePlannerGroup/@sap:label}" visible="false"
+									sortProperty="MaintenancePlannerGroup" tooltip="{/#C_RSHOrdersAndOperationsType/MaintenancePlannerGroup/@sap:quickinfo}" width="20%">
+									<table:template>
+										<m:Label id="idMaintPlannerGrpLabel" text="{MaintenancePlannerGroup}"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idMaintenancePlanColumn" label="{/#C_RSHOrdersAndOperationsType/MaintenancePlan/@sap:label}" visible="false"
+									sortProperty="MaintenancePlan" tooltip="{/#C_RSHOrdersAndOperationsType/MaintenancePlan/@sap:quickinfo}" width="20%">
+									<table:template>
+										<m:Label id="idMaintPlanLabel" text="{MaintenancePlan}"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idMaintenancePlantColumn" label="{/#C_RSHOrdersAndOperationsType/MaintenancePlant/@sap:label}" visible="false"
+									sortProperty="MaintenancePlant" tooltip="{/#C_RSHOrdersAndOperationsType/MaintenancePlant/@sap:quickinfo}" width="20%">
+									<table:template>
+										<m:Label id="idMaintPlantLabel" text="{MaintenancePlant}"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idMaterialStatusColumn" label="{/#C_RSHOrdersAndOperationsType/MaterialStatus/@sap:label}" visible="false"
+									sortProperty="MaterialStatusText" tooltip="{/#C_RSHOrdersAndOperationsType/MaterialStatus/@sap:quickinfo}" width="20%">
+									<table:template>
+										<m:ObjectStatus id="idMatStatusObjStatus" text="{MaterialStatusText}"
+											state="{path: 'MaterialStatus', formatter: '.formatter.materialStatusColor'}"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idRespCostCenterColumn" label="{/#C_RSHOrdersAndOperationsType/ResponsibleCostCenter/@sap:label}" visible="false"
+									sortProperty="ResponsibleCostCenter" tooltip="{/#C_RSHOrdersAndOperationsType/ResponsibleCostCenter/@sap:quickinfo}" width="20%">
+									<table:template>
+										<m:Label id="idRespCCLabel" text="{ResponsibleCostCenter}"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idMaintRevisionColumn" label="{/#C_RSHOrdersAndOperationsType/MaintenanceRevision/@sap:label}" visible="false"
+									sortProperty="MaintenanceRevision" tooltip="{/#C_RSHOrdersAndOperationsType/MaintenanceRevision/@sap:quickinfo}" width="20%">
+									<table:template>
+										<m:Label id="idMaintRevLabel" text="{MaintenanceRevision}"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idRoomColumn" label="{/#C_RSHOrdersAndOperationsType/AssetRoom/@sap:label}" visible="false" sortProperty="AssetRoom"
+									tooltip="{/#C_RSHOrdersAndOperationsType/AssetRoom/@sap:quickinfo}" width="20%">
+									<table:template>
+										<m:Label id="idAssetRoomLabel" text="{AssetRoom}"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idMaintenanceNotification" label="{/#C_RSHOrdersAndOperationsType/MaintenanceNotification/@sap:label}" visible="false"
+									sortProperty="MaintenanceNotification" tooltip="{/#C_RSHOrdersAndOperationsType/MaintenanceNotification/@sap:quickinfo}" width="20%">
+									<table:template>
+										<m:Label id="idMaintNotifLabel" text="{MaintenanceNotification}"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idNetworkColumn" label="{/#C_RSHOrdersAndOperationsType/SuperiorProjectNetwork/@sap:label}" visible="false"
+									sortProperty="SuperiorProjectNetwork" tooltip="{/#C_RSHOrdersAndOperationsType/SuperiorProjectNetwork/@sap:quickinfo}" width="20%">
+									<table:template>
+										<m:Label id="idSupProjNwLabel" text="{SuperiorProjectNetwork}"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idSystemCondColumn" visible="false" sortProperty="OrderSystemConditionText"
+									tooltip="{/#C_RSHOrdersAndOperationsType/OrderSystemCondition/@sap:quickinfo}" width="20%">
+									<m:Text text="{i18n>treeColumnSystemCondition}"/>
+									<table:template>
+										<m:Label id="idOpSysCondLabel" text="{OrderSystemConditionText}"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idPlantSecColumn" label="{/#C_RSHOrdersAndOperationsType/PlantSection/@sap:label}" visible="false"
+									sortProperty="PlantSection" tooltip="{/#C_RSHOrdersAndOperationsType/PlantSection/@sap:quickinfo}" width="20%">
+									<table:template>
+										<m:Label id="idPlantSectionLabel" text="{PlantSection}"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idPersonResponsibleColumn" label="{/#C_RSHOrdersAndOperationsType/OperationPersonResponsible/@sap:label}" visible="false"
+									sortProperty="OperationPersonResponsible" tooltip="{/#C_RSHOrdersAndOperationsType/OperationPersonResponsible/@sap:quickinfo}" width="20%">
+									<table:template>
+										<!--<m:Label text="{parts:['OrderOperationRowLevel', 'OperationPersonResponsible'], formatter: '.formatter.removeLeadingZeros'}"/>-->
+										<m:Label id="idOpPersRespLabel"
+											text="{= RegExp('[1-9]').test(${OperationPersonResponsible}) ? ${ parts:['OrderOperationRowLevel', 'OperationPersonResponsible'], formatter: '.formatter.removeLeadingZeros'} : ''}"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idInfoIconColumn" label="{/#C_RSHOrdersAndOperationsType/HasError/@sap:label}" visible="false" hAlign="Center"
+									sortProperty="HasError" tooltip="{/#C_RSHOrdersAndOperationsType/HasError/@sap:quickinfo}" width="20%">
+									<table:template>
+										<layout:HorizontalLayout id="idIconHL">
+											<core:Icon id="idHasErrorIcon" src="{= ${HasError} ? 'sap-icon://message-information' : null}"
+												tooltip="{/#C_RSHOrdersAndOperationsType/HasError/@sap:quickinfo}"/>
+										</layout:HorizontalLayout>
+									</table:template>
+								</table:Column>
+								<table:Column id="idNormalDurationColumn" label="{/#C_RSHOrdersAndOperationsType/OperationDuration/@sap:label}" visible="false"
+									sortProperty="OperationDuration" tooltip="{/#C_RSHOrdersAndOperationsType/OperationDuration/@sap:quickinfo}" width="20%" hAlign="End">
+									<table:template hAlign="End">
+										<m:Text id="idOpDurationText" text="{parts: ['OperationDuration' , 'OperationDurationUnit'], formatter: '.formatWork'}"
+											wrapping="{= ${UIModel>/condensedModeActive} ? false : true }"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idworkColumn" label="{/#C_RSHOrdersAndOperationsType/OperationPlannedWork/@sap:label}" visible="false"
+									sortProperty="OperationPlannedWork" tooltip="{/#C_RSHOrdersAndOperationsType/OperationPlannedWork/@sap:quickinfo}" width="20%" hAlign="End">
+									<table:template hAlign="End">
+										<m:Text id="idOpPlanWrkText" text="{parts: ['OperationPlannedWork' , 'OperationPlannedWorkUnit'], formatter: '.formatWork'}"
+											wrapping="{= ${UIModel>/condensedModeActive} ? false : true }"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idPlannedStartDateColumn" label="{/#C_RSHOrdersAndOperationsType/PlannedStartDate/@sap:label}" visible="false"
+									sortProperty="PlannedStartDate" tooltip="{/#C_RSHOrdersAndOperationsType/PlannedStartDate/@sap:quickinfo}" width="20%" hAlign="Right">
+									<table:template>
+										<m:Text id="idPlanStDtText" text="{path: 'PlannedStartDate' , type: 'sap.ui.model.type.Date' , formatOptions: {UTC: true}}"
+											wrapping="{= ${UIModel>/condensedModeActive} ? false : true }"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idPlannedEndDateColumn" label="{/#C_RSHOrdersAndOperationsType/PlannedEndDate/@sap:label}" visible="false"
+									sortProperty="PlannedEndDate" tooltip="{/#C_RSHOrdersAndOperationsType/PlannedEndDate/@sap:quickinfo}" width="20%" hAlign="Right">
+									<table:template>
+										<m:Text id="idPlnEndDtText" text="{path: 'PlannedEndDate' , type: 'sap.ui.model.type.Date' , formatOptions: {UTC: true}}"
+											wrapping="{= ${UIModel>/condensedModeActive} ? false : true }"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idPlannedStartTimeColumn" label="{/#C_RSHOrdersAndOperationsType/PlannedStartTime/@sap:label}" visible="false"
+									sortProperty="PlannedStartTime" tooltip="{/#C_RSHOrdersAndOperationsType/PlannedStartTime/@sap:quickinfo}" width="20%" hAlign="Right">
+									<table:template>
+										<m:Text id="idPlnStTmText" text="{path: 'PlannedStartTime' ,formatter: '.formatter.formatTime'}"
+											wrapping="{= ${UIModel>/condensedModeActive} ? false : true }"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idPlannedEndTimeColumn" label="{/#C_RSHOrdersAndOperationsType/PlannedEndTime/@sap:label}" visible="false"
+									sortProperty="PlannedEndTime" tooltip="{/#C_RSHOrdersAndOperationsType/PlannedEndTime/@sap:quickinfo}" width="20%" hAlign="Right">
+									<table:template>
+										<m:Text id="idPlnEndTmText" text="{path: 'PlannedEndTime' ,formatter: '.formatter.formatTime'}"
+											wrapping="{= ${UIModel>/condensedModeActive} ? false : true }"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idFinalDueDateColumn" label="{/#C_RSHOrdersAndOperationsType/LatestAcceptableCompletionDate/@sap:label}" visible="false"
+									sortProperty="LatestAcceptableCompletionDate" tooltip="{/#C_RSHOrdersAndOperationsType/LatestAcceptableCompletionDate/@sap:quickinfo}"
+									width="20%" hAlign="Right">
+									<table:template>
+										<m:Text id="idFinalDueDateText" wrapping="{= ${UIModel>/condensedModeActive} ? false : true }"
+											text="{path: 'LatestAcceptableCompletionDate' , type: 'sap.ui.model.type.Date' , formatOptions: {UTC: true}}"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idExecutionStageColumn" label="{/#C_RSHOrdersAndOperationsType/MaintOpExecutionStageName/@sap:label}" visible="false"
+									sortProperty="MaintOpExecutionStageName" tooltip="{/#C_RSHOrdersAndOperationsType/MaintOpExecutionStageName/@sap:quickinfo}" width="20%">
+									<table:template>
+										<m:Text id="idExecutionStageText" text="{MaintOpExecutionStageName}" wrapping="{= ${UIModel>/condensedModeActive} ? false : true }"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idExecutionStageDescColumn" label="{/#C_RSHOrdersAndOperationsType/MaintOpExecStageShortText/@sap:label}" visible="false"
+									tooltip="{/#C_RSHOrdersAndOperationsType/MaintOpExecStageShortText/@sap:quickinfo}" width="20%" sortProperty="MaintOpExecStageShortText">
+									<table:template>
+										<m:Text id="idExecutionStageDescText" text="{MaintOpExecStageShortText}" wrapping="{= ${UIModel>/condensedModeActive} ? false : true }"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="MainWorkCenterPlantColumn" label="{/#C_RSHOrdersAndOperationsType/MainWorkCenterPlant/@sap:label}" visible="false"
+									sortProperty="MainWorkCenterPlant" tooltip="{/#C_RSHOrdersAndOperationsType/MainWorkCenterPlant/@sap:quickinfo}" width="20%">
+									<table:template>
+										<m:Label id="idMainWorkCenterPlantLabel" text="{MainWorkCenterPlant}"/>
+									</table:template>
+								</table:Column>
+								<!--<table:Column id="idOnCriticalPathColumn" label="{/#C_RSHOrdersAndOperationsType/OperationIsOnCriticalPath/@sap:label}" visible="false"
+									sortProperty="OperationOnCriticalPathText" tooltip="{/#C_RSHOrdersAndOperationsType/OperationIsOnCriticalPath/@sap:quickinfo}" width="20%">
+									<table:template>
+										<m:Text id="idOnCriticalPathText" text="{OperationOnCriticalPathText}"/>
+									</table:template>
+								</table:Column>-->
+								<table:Column id="idProcessPhase" sortProperty="MaintOrdProcessPhaseCode" tooltip="{i18n>treeColumnProcessPhaseTooltip}" visible="false"
+									width="20%">
+									<m:Text text="{i18n>treeColumnProcessPhase}"/>
+									<table:template >
+										<layout:VerticalLayout id="idProcessPhaseVerticalLayout">
+											<m:ObjectStatus id="idMaintOrderProcessPhase" text="{MaintOrdProcessPhaseDesc}"/>
+											<m:ObjectStatus id="idMaintOrderOperationProcessPhase" text="{MaintOrdOpProcessPhaseDesc}"/>
+										</layout:VerticalLayout>
+									</table:template>
+								</table:Column>
+								<table:Column id="idProcessSubPhase" sortProperty="MaintOrdProcessSubPhaseCode" tooltip="{i18n>treeColumnProcessSubPhaseTooltip}"
+									visible="false" width="20%">
+									<m:Text text="{i18n>treeColumnProcessSubPhase}"/>
+									<table:template>
+										<layout:VerticalLayout id="idProcessSubPhaseVerticalLayout">
+											<m:ObjectStatus id="idMaintOrderProcessSubPhase" text="{MaintOrdProcessSubPhaseDesc}"/>
+											<m:ObjectStatus id="idMaintOrderOperationProcessSubPhase" text="{MaintOrdOpProcessSubPhaseDesc}"/>
+										</layout:VerticalLayout>
+									</table:template>
+								</table:Column>
+								<!-- Operations related columns-->
+								<table:Column id="idWorkCenterInternalID" label="{/#C_RSHOrdersAndOperationsType/WorkCenterInternalID/@sap:label}" visible="false"
+									sortProperty="WorkCenterInternalID" tooltip="{/#C_RSHOrdersAndOperationsType/WorkCenterInternalID/@sap:label}" width="20%">
+									<table:template>
+										<m:Text id="idWorkCenterInternalIDText" text="{WorkCenterInternalID}" wrapping="{= ${UIModel>/condensedModeActive} ? false : true }"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idWorkCenterTypeCode" label="{/#C_RSHOrdersAndOperationsType/WorkCenterTypeCode/@sap:label}" visible="false"
+									sortProperty="WorkCenterTypeCode" tooltip="{/#C_RSHOrdersAndOperationsType/WorkCenterTypeCode/@sap:label}" width="20%">
+									<table:template>
+										<m:Text id="idWorkCenterTypeCodeText" text="{WorkCenterTypeCode}" wrapping="{= ${UIModel>/condensedModeActive} ? false : true }"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idPlant" label="{/#C_RSHOrdersAndOperationsType/Plant/@sap:label}" visible="false" sortProperty="Plant"
+									tooltip="{/#C_RSHOrdersAndOperationsType/Plant/@sap:label}" width="20%">
+									<table:template>
+										<m:Text id="idPlantText" text="{Plant}" wrapping="{= ${UIModel>/condensedModeActive} ? false : true }"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idOperationControlKey" label="{/#C_RSHOrdersAndOperationsType/OperationControlKey/@sap:label}" visible="false"
+									sortProperty="OperationControlKey" tooltip="{/#C_RSHOrdersAndOperationsType/OperationControlKey/@sap:label}" width="20%">
+									<table:template>
+										<m:Text id="idOperationControlKeyText" text="{OperationControlKey}" wrapping="{= ${UIModel>/condensedModeActive} ? false : true }"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idNumberOfCapacities" label="{/#C_RSHOrdersAndOperationsType/NumberOfCapacities/@sap:label}" visible="false"
+									sortProperty="NumberOfCapacities" tooltip="{/#C_RSHOrdersAndOperationsType/NumberOfCapacities/@sap:label}" width="20%">
+									<table:template>
+										<m:Text id="idNumberOfCapacitiesText" text="{NumberOfCapacities}" wrapping="{= ${UIModel>/condensedModeActive} ? false : true }"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idOperationHasLongText" label="{/#C_RSHOrdersAndOperationsType/OperationHasLongText/@sap:label}" visible="false"
+									sortProperty="OperationHasLongText" tooltip="{/#C_RSHOrdersAndOperationsType/OperationHasLongText/@sap:label}" width="20%">
+									<table:template>
+										<m:Text id="idOperationHasLongTextText" text="{OperationHasLongText}" wrapping="{= ${UIModel>/condensedModeActive} ? false : true }"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idOperationPersonRespName" label="{/#C_RSHOrdersAndOperationsType/OperationPersonRespName/@sap:label}" visible="false"
+									sortProperty="OperationPersonRespName" tooltip="{/#C_RSHOrdersAndOperationsType/OperationPersonRespName/@sap:label}" width="20%">
+									<table:template>
+										<m:Text id="idOperationPersonRespNameText" text="{OperationPersonRespName}" wrapping="{= ${UIModel>/condensedModeActive} ? false : true }"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idMaintenancePhaseControlText" label="{/#C_RSHOrdersAndOperationsType/MaintenancePhaseControlText/@sap:label}"
+									visible="false" tooltip="{/#C_RSHOrdersAndOperationsType/MaintenancePhaseControlText/@sap:label}" sortProperty="MaintenancePhaseControlText"
+									showSortMenuEntry="false">
+									<table:template>
+										<m:Label id="idMaintenancePhaseControlLabel" text="{MaintenancePhaseControlText}" tooltip="{MaintenancePhaseControlText}"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idTechnicalObjectColumn" visible="false" sortProperty="TechnicalObjectDescription"
+									tooltip="{/#C_RSHOrdersAndOperationsType/TechnicalObjectDescription/@sap:quickinfo}" width="20%">
+									<m:Text text="{i18n>treeColumnTechnicalObject}"/>
+									<table:template>
+										<m:Link id="idTechObjText" text="{parts: ['TechnicalObjectLabel','TechnicalObjectDescription']}" press="handleTechnicalObjectLinkPress"
+											tooltip="{parts: ['TechnicalObjectLabel','TechnicalObjectDescription']}"
+											visible="{= ${TechnicalObjectLabel} || ${TechnicalObjectDescription} ? true : false}"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idTechnicalObjectTypeColumn" visible="false" sortProperty="TechObjIsEquipOrFuncnlLocDesc"
+									tooltip="{/#C_RSHOrdersAndOperationsType/TechObjIsEquipOrFuncnlLoc/@sap:label}" width="20%">
+									<m:Text text="{i18n>treeColumnTechnicalObjectType}"/>
+									<table:template>
+										<m:Label id="idTechnObjTypeColumn" text="{TechObjIsEquipOrFuncnlLocDesc}"/>
+									</table:template>
+								</table:Column>
+								<table:Column id="idSchedulingTypeName" label="{/#C_RSHOrdersAndOperationsType/SchedulingType/@sap:label}" visible="false"
+									sortProperty="SchedulingTypeName" tooltip="{/#C_RSHOrdersAndOperationsType/SchedulingTypeName/@sap:label}" width="20%">
+									<table:template>
+										<m:Text id="idSchedulingType" text="{SchedulingTypeName}" wrapping="{= ${UIModel>/condensedModeActive} ? false : true }"/>
+									</table:template>
+								</table:Column>
+							</table:columns>
+						</table:TreeTable>
+					</table>
+					<calendarDef>
+						<gnt-cal:CalendarDefs id="idCalDef">
+							<!--	<gnt-cal:Calendar key="{CalendarID}" timeIntervals="{path:'to_Intervals', templateShareable: 'true'}"
+								backgroundColor="sapUiChartPaletteSemanticNeutralLight3">
+								<gnt-cal:TimeInterval startTime="{path: 'MaintAssetBoardShapeStrtDteTme', formatter: '.removeTimeZoneOffset'}"
+									endTime="{path: 'MaintAssetBoardShapeEndDteTme', formatter: '.removeTimeZoneOffset'}"/>
+							</gnt-cal:Calendar>-->
+						</gnt-cal:CalendarDefs>
+					</calendarDef>
+				</GanttChartWithTable>
+			</GanttChartContainer>
+		</f:content>
+		<f:footer id="GanttFooter" visible="{MessagePopoverButtonModel>/visible}">
+			<m:Toolbar id="GanttFooterToolBar">
+				<core:InvisibleText id="idMessageInvisibleButton" text="{i18n>ViewMessages}"/>
+				<m:Button id="idMainViewMessagePopOver" icon="{MessagePopoverButtonModel>/severityIcon}" type="{MessagePopoverButtonModel>/severityType}"
+					text="{MessagePopoverButtonModel>/severityCount}" press="onMessagePopoverPress" visible="{MessagePopoverButtonModel>/visible}"
+					tooltip="{i18n>messagePopoverToolTip}" ariaLabelledBy="idMessageInvisibleButton"/>
+			</m:Toolbar>
+		</f:footer>
+	</f:DynamicPage>
+</mvc:View>

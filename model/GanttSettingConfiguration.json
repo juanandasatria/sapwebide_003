@@ -1,0 +1,37 @@
+{
+	"LayoutTab": true,
+	"WorkCenterTab": true,
+	"OrderOperationTab": true,
+	"LabelTab": false,
+	"DragAndDropTab": false,
+	"Layoutsettings": {
+		"enableNowLine": true,
+		"enableVerticalLine": true,
+		"enableCursorLine": true,
+		"enableDeltaLine": false,
+		"enableStatusBar": true,
+		"condensedModeActive": true
+	},
+	"WorkCenterSettings": {
+		"showNonWorkingTimes": true,
+		"showUtilizationIndicator": true
+	},
+	"OrdersAndOperationsSettings": {
+		"showFinalDueDate": true,
+		"showImpRel": true,
+		"showExpRel": true,
+		"showMustStartRestriction": true
+	},
+	"LabelSettings": {
+		"orderBarLeftText": false,
+		"orderBarInsideText": false,
+		"orderBarRightText": false,
+		"operationBarLeftText": false,
+		"operationBarInsideText": false,
+		"operationsBarRightText": false
+	},
+	"DragAndDropSettings": {
+		"accuracy": false,
+		"setStatus": false
+	}
+}

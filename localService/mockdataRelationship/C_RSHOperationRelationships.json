@@ -1,0 +1,15 @@
+[{
+	"PredecessorOrder": "4252501",
+	"PredecessorOrderOperation": "0010",
+	"SuccessorOrder": "4252501",
+	"SuccessorOrderOperation": "0020",
+	"NetworkActivityRelationType": "FinishToStart",
+	"RelationshipIsExplicit": "X",
+	"PredecessorOrderOperationRowID": "0000042525010010",
+	"SuccessorOrderOperationRowID": "0000042525010020",
+	"__metadata": {
+		"id": "C_RSHOperationRelationships(PredecessorOrder='4252501',PredecessorOrderOperation='0010',SuccessorOrder='4252501',SuccessorOrderOperation='0020')",
+		"type": "RSH_EAM_ORDER_GANTT_SRV.C_RSHOperationRelationshipsType",
+		"uri": "C_RSHOperationRelationships(PredecessorOrder='4252501',PredecessorOrderOperation='0010',SuccessorOrder='4252501',SuccessorOrderOperation='0020')"
+	}
+}]
